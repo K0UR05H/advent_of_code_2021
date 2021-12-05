@@ -1,16 +1,9 @@
-use std::{
-    fs::File,
-    io::{BufRead, BufReader},
-};
+const INPUT: &str = include_str!("input");
 
 fn main() {
-    let file = File::open("inputs/day_1").expect("input file not found!");
-    let reader = BufReader::new(file);
-
-    let depths = reader
+    let depths = INPUT
         .lines()
-        .map(|result| result.unwrap())
-        .map(|line| line.parse().unwrap())
+        .flat_map(|line| line.parse())
         .collect::<Vec<usize>>();
 
     let mut inc = 0;
