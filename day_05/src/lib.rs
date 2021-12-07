@@ -49,7 +49,7 @@ impl Line {
                     y: i,
                 });
             }
-        } else {
+        } else if self.is_horizontal() {
             let start_x = min(self.start.x, self.end.x);
             let end_x = max(self.start.x, self.end.x);
             for i in start_x..=end_x {
@@ -57,6 +57,25 @@ impl Line {
                     x: i,
                     y: self.start.y,
                 });
+            }
+        } else {
+            points.push(self.start);
+
+            let mut mid_point = self.start;
+            while mid_point != self.end {
+                if mid_point.x < self.end.x {
+                    mid_point.x += 1;
+                } else if mid_point.x > self.end.x {
+                    mid_point.x -= 1;
+                }
+
+                if mid_point.y < self.end.y {
+                    mid_point.y += 1;
+                } else if mid_point.y > self.end.y {
+                    mid_point.y -= 1;
+                }
+
+                points.push(mid_point);
             }
         }
 
@@ -138,6 +157,24 @@ mod tests {
             Point::from_str("1,4").unwrap(),
             Point::from_str("2,4").unwrap(),
             Point::from_str("3,4").unwrap(),
+        ];
+
+        assert_eq!(line.points(), expected);
+
+        let line = Line::from_str("1,1 -> 3,3").unwrap();
+        let expected = vec![
+            Point::from_str("1,1").unwrap(),
+            Point::from_str("2,2").unwrap(),
+            Point::from_str("3,3").unwrap(),
+        ];
+
+        assert_eq!(line.points(), expected);
+
+        let line = Line::from_str("9,7 -> 7,9").unwrap();
+        let expected = vec![
+            Point::from_str("9,7").unwrap(),
+            Point::from_str("8,8").unwrap(),
+            Point::from_str("7,9").unwrap(),
         ];
 
         assert_eq!(line.points(), expected);
