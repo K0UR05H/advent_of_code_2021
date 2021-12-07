@@ -1,4 +1,5 @@
 use std::{
+    cmp::Ordering::{Greater, Less},
     cmp::{max, min},
     num::ParseIntError,
     str::FromStr,
@@ -63,16 +64,16 @@ impl Line {
 
             let mut mid_point = self.start;
             while mid_point != self.end {
-                if mid_point.x < self.end.x {
-                    mid_point.x += 1;
-                } else if mid_point.x > self.end.x {
-                    mid_point.x -= 1;
+                match mid_point.x.cmp(&self.end.x) {
+                    Greater => mid_point.x -= 1,
+                    Less => mid_point.x += 1,
+                    _ => (),
                 }
 
-                if mid_point.y < self.end.y {
-                    mid_point.y += 1;
-                } else if mid_point.y > self.end.y {
-                    mid_point.y -= 1;
+                match mid_point.y.cmp(&self.end.y) {
+                    Greater => mid_point.y -= 1,
+                    Less => mid_point.y += 1,
+                    _ => (),
                 }
 
                 points.push(mid_point);
