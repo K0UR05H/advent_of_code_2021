@@ -2,12 +2,9 @@ pub fn least_fuel_position(positions: &mut [i32]) -> i32 {
     positions.sort_unstable();
     let mid = positions[positions.len() / 2];
 
-    let mut fuel = 0;
-    for position in positions {
-        fuel += (mid - *position).abs();
-    }
-
-    fuel
+    positions
+        .iter()
+        .fold(0, |fuel, position| fuel + (mid - position).abs())
 }
 
 fn fuel_cost(p1: i32, p2: i32) -> i32 {
@@ -17,19 +14,15 @@ fn fuel_cost(p1: i32, p2: i32) -> i32 {
 }
 
 pub fn least_fuel_inc_position(positions: &[i32]) -> i32 {
-    let mut least_fuel = i32::MAX;
-
     let max_pos = positions.iter().copied().max().unwrap();
-    for align_position in 0..max_pos {
-        let mut cost = 0;
-        for &position in positions {
-            cost += fuel_cost(position, align_position);
-        }
-
-        least_fuel = least_fuel.min(cost);
-    }
-
-    least_fuel
+    (0..max_pos)
+        .map(|align_position| {
+            positions.iter().fold(0, |cost, &position| {
+                cost + fuel_cost(position, align_position)
+            })
+        })
+        .min()
+        .unwrap()
 }
 
 #[cfg(test)]
